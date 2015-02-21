@@ -26,6 +26,7 @@ set dir=~/vimswap//,.
 set autochdir " may cause problems with scripts
 set backup                    " Keep a backup file
 set backupdir=C:/Users/Michael/vimbackup
+set undodir=~/vimundo//,.
 
 " Search Options:
 set hlsearch                   " Highlight searches. See below for more.
@@ -37,7 +38,7 @@ set showmatch                  " Show matching bracket
 " Insert (Edit) Options:
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode
 set autoindent                 " Sane indenting when filetype not recognised
-set nostartofline              " Emulate typical editor navigation behaviour
+" set nostartofline              " Emulate typical editor navigation behaviour
 set nopaste                    " Start in normal (non-paste) mode
 set pastetoggle=<f11>          " Use <F11> to toggle paste modes
 set linebreak                  " Soft break across words.
@@ -55,7 +56,7 @@ set laststatus=2               " Always show a status line
 
 " Interface Options:
 :colo darkblue
-set ruler
+set noruler                    " Causes choppy scrolling :-(
 set number                     " Display line numbers at left of screen
 set relativenumber
 set visualbell                 " Flash the screen instead of beeping on errors
@@ -70,8 +71,8 @@ set history=50                  " Keep 50 lines of command line history
 " Indentation Options:
 set tabstop=8                  " NEVER change this!
 " Change the '2' value below to your preferred indentation level
-set shiftwidth=4               " Number of spaces for
-set softtabstop=4              " ...each indent level
+set shiftwidth=2               " Number of spaces for
+set softtabstop=2              " ...each indent level
 set expandtab                  " Expand <tab> with spaces in insert mode.
 
 " Text Options:
@@ -115,7 +116,7 @@ set gdefault
 " nnoremap ; :
 nnoremap <leader>. ,
 " Save and reload script
-nnoremap <leader>s :w<CR>:so %<CR>
+nnoremap <leader>s :so $MYVIMRC<CR>
 
 " Allow repetition inside of visual selection
 vnoremap . :norm.<CR>
@@ -135,7 +136,7 @@ command! -nargs=* Wrap set wrap linebreak nolist
 
 
 
-" ENable these once you have a better grasp of window commands.
+" Enable these once you have a better grasp of window commands.
 " nnoremap <leader>w <C-w>v<C-w>l
 " 
 " nnoremap <C-h> <C-w>h
@@ -216,3 +217,16 @@ endif
 " f F, t T -> forward (or till) the char
 " +, - -> move up/down to the first non-blank character
 " ge -> back to end of word
+
+function! GetPath()
+  let b:path = expand("%:p:h")
+  let b:tilde = expand("~")
+  let b:pattern = '^' . escape(b:tilde, '/\')
+  return substitute(b:path, b:pattern, "~", "")
+endfunction
+
+function! GetTitle()
+  return 'VIM'
+endfunction
+
+set titlestring=%t\ %M\ (%{GetPath()})\ -\ %{GetTitle()}\ (%{mode()})
