@@ -55,7 +55,7 @@ set laststatus=2               " Always show a status line
 " set statusline=%f%m%r%h%w\ [%n:%{&ff}/%Y]%=[0x\%04.4B][%03v][%p%%\ line\ %l\ of\ %L]
 
 " Interface Options:
-:colo darkblue
+colo darkblue
 set noruler                    " Causes choppy scrolling :-(
 set number                     " Display line numbers at left of screen
 set relativenumber
@@ -78,12 +78,15 @@ set expandtab                  " Expand <tab> with spaces in insert mode.
 " Text Options:
 set encoding=utf-8
 
+set modelines=5
 """""""
 " Maps
 """""""
 "
 " F1 to be a context sensitive keyword-under-cursor lookup
 nnoremap <F2> :help <C-R><C-W><CR>
+
+nnoremap <leader>c :bp<bar>sp<bar>bn<bar>bd<CR>
 
 " Reformat current paragraph
 "nnoremap Q gqip
@@ -230,3 +233,12 @@ function! GetTitle()
 endfunction
 
 set titlestring=%t\ %M\ (%{GetPath()})\ -\ %{GetTitle()}\ (%{mode()})
+
+
+" HTML indent setup
+let g:html_indent_script1 = "inc"
+let g:html_indent_style1 = "inc"
+let g:html_indent_strict=1
+
+
+ab <// </<C-X><C-O><C-F>
