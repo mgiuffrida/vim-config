@@ -1,0 +1,6 @@
+[submodule "vimfiles/bundle/camelcasemotion"]
+	path = vimfiles/bundle/camelcasemotion
+	url = git@github.com:vim-scripts/camelcasemotion.git
+[submodule "vimfiles/bundle/CSSMinister"]
+	path = vimfiles/bundle/CSSMinister
+	url = git@github.com:vim-scripts/CSSMinister.git

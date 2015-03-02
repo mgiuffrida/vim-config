@@ -112,7 +112,7 @@ inoremap jk <ESC>
 " "Fix" default regex handling.
 nnoremap / /\v
 vnoremap / /\v
-set gdefault
+" set gdefault
 " nnoremap <tab> %
 " vnoremap <tab> %
 
@@ -233,7 +233,6 @@ function! GetTitle()
 endfunction
 
 set titlestring=%t\ %M\ (%{GetPath()})\ -\ %{GetTitle()}\ (%{mode()})
-
 
 " HTML indent setup
 let g:html_indent_script1 = "inc"
