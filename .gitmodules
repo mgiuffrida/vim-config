@@ -4,3 +4,15 @@
 [submodule "vimfiles/bundle/CSSMinister"]
 	path = vimfiles/bundle/CSSMinister
 	url = git@github.com:vim-scripts/CSSMinister.git
+[submodule "vimfiles/bundle/vim-help"]
+	path = vimfiles/bundle/vim-help
+	url = git@github.com:travisjeffery/vim-help.git
+[submodule "vimfiles/bundle/vim-fugitive"]
+	path = vimfiles/bundle/vim-fugitive
+	url = git@github.com:tpope/vim-fugitive
+[submodule "vimfiles/bundle/emmet-vim"]
+	path = vimfiles/bundle/emmet-vim
+	url = git@github.com:mattn/emmet-vim.git
+[submodule "vimfiles/bundle/html5.vim"]
+	path = vimfiles/bundle/html5.vim
+	url = git@github.com:othree/html5.vim.git
