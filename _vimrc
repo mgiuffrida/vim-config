@@ -25,7 +25,7 @@ set undofile
 set dir=~/vimswap//,.
 set autochdir " may cause problems with scripts
 set backup                    " Keep a backup file
-set backupdir=C:/Users/Michael/vimbackup
+set backupdir=~/vimbackup//,.
 set undodir=~/vimundo//,.
 
 " Search Options:
@@ -241,3 +241,5 @@ let g:html_indent_strict=1
 
 
 ab <// </<C-X><C-O><C-F>
+
+"if $THIS_ENV ==# "google"
