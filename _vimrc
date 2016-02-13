@@ -18,7 +18,9 @@ set runtimepath+=~/.vim/bundle/Vundle.vim " required for Vundle
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim' " required for Vundle
+Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
 Plugin 'bkad/CamelCaseMotion'
 Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
@@ -42,12 +44,6 @@ filetype plugin indent on " Enable automatic settings based on file type
 set modelines=0
 
 let mapleader = ","
-
-
-
-
-
-
 
 
 syntax on " Syntax highlighting
@@ -93,7 +89,6 @@ set formatoptions+=q          " Format comments with gq
 set formatoptions+=l          " Insert mode won't break pre-existing long lines
 set formatoptions+=j          " Delete comment leader when joining lines
 set pastetoggle=<Leader>p     " Format options don't apply when paste is set
-" TODO: still doesn't wrap all the time
 
 set nowrap
 
@@ -150,8 +145,6 @@ set smarttab                   " <Tab> in front of a line inserts shiftwidth spa
 
 set nolist " because the trailing space drives me crazy when typing
 set listchars=tab:>\ ,trail:$,extends:%,precedes:<,nbsp:+
-" Here is a
-" note for me
 
 " Text Options:
 if has('multi_byte')
@@ -159,6 +152,7 @@ if has('multi_byte')
 en
 
 set modelines=5
+
 """""""
 " Maps
 """""""
@@ -220,23 +214,13 @@ nnoremap <Leader>v V`]
 " Commands:
 command! -nargs=* Wrap set wrap nolist
 
-
-
-" Enable these once you have a better grasp of window commands
-" nnoremap <Leader>w <C-w>v<C-w>l
-" 
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
+" Split screen
+nnoremap <Leader>w <C-w>v<C-w>l
 
 set splitbelow splitright " Split windows below or to the right
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 let &guioptions = substitute(&guioptions, "t", "", "g")
-
-" Don't use Ex mode, use Q for formatting
-" map Q gq
 
 " CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
 " so that you can undo CTRL-U after inserting a line break.
@@ -368,9 +352,6 @@ endfunction
 
 
 
-
-
-
 " Plugin cheat-sheet
 "
 " #vim-surround
@@ -403,5 +384,3 @@ set tags=tags;
 
 " Jump to next merge conflict
 nnoremap <Leader>m /\v\<{7}<CR>zt
-
-
