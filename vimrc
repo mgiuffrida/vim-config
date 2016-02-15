@@ -4,7 +4,7 @@ if has('win32unix')
 endif
 
 " Backup directory
-if has('win32')
+if has('win32') || has('win32unix')
   let s:backup = $HOME.'/_vimbackup'
 else
   let s:backup = $HOME.'/.vimbackup'
@@ -13,7 +13,12 @@ endif
 set nocompatible " required for Vundle, changes lots of options
 filetype off " required for Vundle
 
-set runtimepath+=~/.vim/bundle/Vundle.vim " required for Vundle
+" required for Vundle
+if has('win32') || has('win32unix')
+  set runtimepath+=~/vimfiles/bundle/Vundle.vim
+else
+  set runtimepath+=~/.vim/bundle/Vundle.vim
+endif
 
 call vundle#begin()
 
@@ -78,7 +83,7 @@ set showmatch            " Show matching bracket
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 set autoindent                " Use indent from current/first line
-set linebreak                 " Soft break across words when wrapping
+set nolinebreak               " No soft break across words when wrapping
                               " Messes with colorcolumn
 set textwidth=80              " Break lines at 80
 set colorcolumn=+1
@@ -119,7 +124,11 @@ set statusline+=[%b]\ \ %#LineNr#\ \ %l\/%L\ :%3.3v%##
 "                 ^--------value of character under cursor
 
 " Interface Options:
-colo industry
+if has('win32') || has('win32unix')
+  colo darkblue
+else
+  colo industry
+endif
 highlight ColorColumn ctermbg=8 ctermfg=1 guibg=Grey guifg=DarkRed
 
 set ruler                      " Can cause choppy scrolling...
@@ -212,7 +221,7 @@ nnoremap <Leader>ft Vatzf
 nnoremap <Leader>v V`]
 
 " Commands:
-command! -nargs=* Wrap set wrap nolist
+command! -nargs=* Wrap set wrap nolinebreak nolist
 
 " Split screen
 nnoremap <Leader>w <C-w>v<C-w>l
@@ -263,7 +272,7 @@ if !exists(':DiffOrig')
 endif
 
 " notes:
-" Ctrl+[ == ESC
+" Ctrl+[ ~= ESC
 " v after operator forces a motion to be linewise, or exclusive if already
 " linewise.
 " Toggles exclusive/inclusive on characterwise motions.
@@ -350,8 +359,6 @@ endfunction
 "   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 " endif
 
-
-
 " Plugin cheat-sheet
 "
 " #vim-surround
@@ -366,7 +373,6 @@ endfunction
 " Visual mode:
 "   S"
 "
-
 " #vim-abolish
 " Abolish:
 "   :Abolish {despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or} {despe,sepa}rat{}
@@ -384,3 +390,8 @@ set tags=tags;
 
 " Jump to next merge conflict
 nnoremap <Leader>m /\v\<{7}<CR>zt
+
+" Do this last (especially after setting encoding)
+set autochdir " may cause problems with scripts
+
+" todo: Plugins on Windows: argtextobj, vim-abolish, vim-javascript, vim-markdown, vim-repeat, vim-surround
