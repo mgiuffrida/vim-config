@@ -3,24 +3,22 @@ if has('win32unix')
   set runtimepath+='C:/Users/Michael/vimfiles'
 endif
 
-" Backup directory
+" Directories
 if has('win32') || has('win32unix')
   let s:backup = $HOME.'/_vimbackup'
+  let s:bundle = $HOME.'/vimfiles/bundle'
 else
   let s:backup = $HOME.'/.vimbackup'
+  let s:bundle = $HOME.'/.vim/bundle'
 endif
 
 set nocompatible " required for Vundle, changes lots of options
 filetype off " required for Vundle
 
 " required for Vundle
-if has('win32') || has('win32unix')
-  set runtimepath+=~/vimfiles/bundle/Vundle.vim
-else
-  set runtimepath+=~/.vim/bundle/Vundle.vim
-endif
+let &runtimepath .= ',' . s:bundle . '/Vundle.vim'
 
-call vundle#begin()
+call vundle#begin(s:bundle)
 
 Plugin 'VundleVim/Vundle.vim' " required for Vundle
 Plugin 'tpope/vim-abolish'

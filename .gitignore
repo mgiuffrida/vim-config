@@ -1,4 +1,3 @@
 # Manage bundles with Vundle.
 vimfiles/bundle/*
-!vimfiles/bundle/Vundle.vim
 .netrwhist
