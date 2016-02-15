@@ -4,3 +4,7 @@ set t_vb=                      " Disable screen flash on error
 function! GetTitle()
   return 'GVIM'
 endfunction
+
+let &numberwidth = float2nr(log10(line("$"))) + 3
+    \| let &columns = &numberwidth + 80
+
