@@ -15,6 +15,8 @@ endif
 set nocompatible " required for Vundle, changes lots of options
 filetype off " required for Vundle
 
+let mapleader = ","
+
 " required for Vundle
 let &runtimepath .= ',' . s:bundle . '/Vundle.vim'
 
@@ -45,9 +47,6 @@ filetype plugin indent on " Enable automatic settings based on file type
 
 " Prevents some security exploits having to do with modelines in files
 set modelines=0
-
-let mapleader = ","
-
 
 syntax on " Syntax highlighting
 
@@ -221,9 +220,6 @@ nnoremap <Leader>v V`]
 " Commands:
 command! -nargs=* Wrap set wrap nolinebreak nolist
 
-" Split screen
-nnoremap <Leader>w <C-w>v<C-w>l
-
 set splitbelow splitright " Split windows below or to the right
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
@@ -391,5 +387,7 @@ nnoremap <Leader>m /\v\<{7}<CR>zt
 
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
+
+call camelcasemotion#CreateMotionMappings('<leader>')
 
 " todo: Plugins on Windows: argtextobj, vim-abolish, vim-javascript, vim-markdown, vim-repeat, vim-surround
