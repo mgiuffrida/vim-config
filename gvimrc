@@ -5,6 +5,10 @@ function! GetTitle()
   return 'GVIM'
 endfunction
 
+if has('win32') || has('win32unix')
+  set guifont=Consolas:h11
+endif
+
 let &numberwidth = float2nr(log10(line("$"))) + 3
     \| let &columns = &numberwidth + 80
 
