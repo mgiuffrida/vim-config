@@ -31,6 +31,8 @@ Plugin 'mattn/emmet-vim'
 Plugin 'othree/html5.vim'
 Plugin 'CSSMinister'
 Plugin 'travisjeffery/vim-help'
+Plugin 'nvie/vim-flake8' " Python syntax and indent checker
+Plugin 'hynek/vim-python-pep8-indent' " Better PEP-8 indent
 
 " Plugins to consider:
 "   SuperTab
