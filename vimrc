@@ -92,7 +92,7 @@ set formatoptions+=r          " or hitting <Enter>
 set formatoptions+=q          " Format comments with gq
 set formatoptions+=l          " Insert mode won't break pre-existing long lines
 set formatoptions+=j          " Delete comment leader when joining lines
-set pastetoggle=<Leader>p     " Format options don't apply when paste is set
+set pastetoggle=<F2>          " Format options don't apply when paste is set
 
 set nowrap
 
@@ -166,7 +166,7 @@ set modelines=5
 """""""
 "
 " F1 to be a context sensitive keyword-under-cursor lookup
-nnoremap <F2> :help <C-R><C-W><CR>
+nnoremap <F1> :help <C-R><C-W><CR>
 
 " Delete current buffer without closing the window
 nnoremap <Leader>c :bp<bar>sp<bar>bn<bar>bd<CR>
