@@ -33,6 +33,8 @@ Plugin 'CSSMinister'
 Plugin 'travisjeffery/vim-help'
 Plugin 'nvie/vim-flake8' " Python syntax and indent checker
 Plugin 'hynek/vim-python-pep8-indent' " Better PEP-8 indent
+Plugin 'plasticboy/vim-markdown'
+Plugin 'alunny/pegjs-vim'
 
 " Plugins to consider:
 "   SuperTab
@@ -41,6 +43,10 @@ Plugin 'hynek/vim-python-pep8-indent' " Better PEP-8 indent
 "   vim-easymotion
 
 call vundle#end() " required for Vundle
+
+" vim-javascript config
+let g:javascript_plugin_jsdoc = 1
+
 
 " Load extended matching script
 :runtime macros/matchit.vim
@@ -195,13 +201,6 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 inoremap jk <ESC>
 
-" "Fix" default regex handling
-nnoremap / /\v
-vnoremap / /\v
-" set gdefault
-" nnoremap <tab> %
-" vnoremap <tab> %
-
 " nnoremap ; :
 nnoremap <Leader>. ,
 " Save and reload script
@@ -240,6 +239,8 @@ if has('autocmd')
 
   " For all text files set 'textwidth' to 80 characters.
   autocmd FileType text setlocal textwidth=80
+
+  autocmd FileType markdown setlocal textwidth=120
 
   " When editing a file, always jump to the last known cursor position.
   " Don't do it when the position is invalid or when inside an event handler
@@ -378,14 +379,18 @@ endfunction
 "   crs (snake_case), crm (MixedCase), crc (camelCase), cru (UPPER_CASE)
 "
 "
-" vim-markdown
-let g:markdown_enable_spell_checking = 0
+" plasticboy/vim-markdown
+let g:vim_markdown_folding_level = 4
+let g:vim_markdown_new_list_item_indent = 2
+let g:markdown_fenced_languages = ["cpp", "c"]
+
+set foldlevelstart=9
 
 " look for tags in cwd, then in parent directories
 set tags=tags;
 
 " Jump to next merge conflict
-nnoremap <Leader>m /\v\<{7}<CR>zt
+nnoremap <Leader>m /<\{7}<CR>zt
 
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
