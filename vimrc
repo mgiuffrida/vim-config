@@ -1,54 +1,44 @@
+" todo: source stuff for filenames
+" does cygwin prevent sourcing before the below?
+
 " Fix for Cygwin
 if has('win32unix')
-  set runtimepath+='C:/Users/Michael/vimfiles'
+  set runtimepath+='C:/Users/micha/vimfiles'
 endif
 
 " Directories
 if has('win32') || has('win32unix')
   let s:backup = $HOME.'/_vimbackup'
-  let s:bundle = $HOME.'/vimfiles/bundle'
+  let s:vundlevim = $HOME.'/_vundle.vim'
 else
   let s:backup = $HOME.'/.vimbackup'
-  let s:bundle = $HOME.'/.vim/bundle'
+  let s:vundlevim = $HOME.'/.vundle.vim'
 endif
 
-set nocompatible " required for Vundle, changes lots of options
-filetype off " required for Vundle
+" Environment configuration
+if has('win32')
+  " Assume /bin/sh refers to a POSIX "sh" on Windows. (On Linux, sh.vim will
+  " resolve the actual executable used.)
+  let g:is_posix = 1
+endif
+
+" Re-setting nocompatible can change other options with mysterious side effects.
+if &compatible
+  set nocompatible
+endif
 
 let mapleader = ","
+let maplocalleader = "\\"
 
-" required for Vundle
-let &runtimepath .= ',' . s:bundle . '/Vundle.vim'
+" Load Vundle plugins.
+try
+  :exec 'source ' . s:vundlevim
+catch
+  echom v:exception
+  echom 'Failed to source ' . s:vundlevim
+endtry
 
-call vundle#begin(s:bundle)
-
-Plugin 'VundleVim/Vundle.vim' " required for Vundle
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'bkad/CamelCaseMotion'
-Plugin 'mattn/emmet-vim'
-Plugin 'othree/html5.vim'
-Plugin 'CSSMinister'
-Plugin 'travisjeffery/vim-help'
-Plugin 'nvie/vim-flake8' " Python syntax and indent checker
-Plugin 'hynek/vim-python-pep8-indent' " Better PEP-8 indent
-Plugin 'plasticboy/vim-markdown'
-Plugin 'alunny/pegjs-vim'
-
-" Plugins to consider:
-"   SuperTab
-"   nerdcommenter
-"   ctrlp
-"   vim-easymotion
-
-call vundle#end() " required for Vundle
-
-" vim-javascript config
-let g:javascript_plugin_jsdoc = 1
-
-
-" Load extended matching script
+" Load extended matching plugin for %.
 :runtime macros/matchit.vim
 
 filetype plugin indent on " Enable automatic settings based on file type
@@ -90,14 +80,6 @@ set backspace=indent,eol,start
 set autoindent                " Use indent from current/first line
 set nolinebreak               " No soft break across words when wrapping
                               " Messes with colorcolumn
-set textwidth=80              " Break lines at 80
-set colorcolumn=+1
-set formatoptions+=t          " Auto-wrap at textwidth
-set formatoptions+=c          " Insert comment leader after wrapping
-set formatoptions+=r          " or hitting <Enter>
-set formatoptions+=q          " Format comments with gq
-set formatoptions+=l          " Insert mode won't break pre-existing long lines
-set formatoptions+=j          " Delete comment leader when joining lines
 set pastetoggle=<F2>          " Format options don't apply when paste is set
 
 set nowrap
@@ -130,11 +112,16 @@ set statusline+=[%b]\ \ %#LineNr#\ \ %l\/%L\ :%3.3v%##
 
 " Interface Options:
 if has('win32') || has('win32unix')
-  colo darkblue
+  silent! colo darkblue
 else
-  colo industry
+  silent! colo industry
 endif
-highlight ColorColumn ctermbg=8 ctermfg=1 guibg=Grey guifg=DarkRed
+
+function! ColorColumnHighlight()
+  highlight ColorColumn ctermbg=8 ctermfg=1 guibg=Grey guifg=DarkRed
+endfunc
+
+call ColorColumnHighlight()
 
 set ruler                      " Can cause choppy scrolling...
 set number                     " Display line numbers at left of screen
@@ -142,15 +129,16 @@ set relativenumber             " Show line numbers relative to cursor
 set visualbell                 " Flash the screen instead of beeping on errors
 set t_vb=                      " And then disable even the flashing
 set mouse=a                    " Enable mouse usage (all modes) in terminals
+
 " Quickly time out on keycodes
-" Indentation Options:
 set timeoutlen=200
+
 " Keep 3 lines around cursor visible
 set scrolloff=3
 set sidescroll=1                " Scroll smoothly when nowrap
 set display+=lastline           " Show partial last line when the line wraps
 
-
+" Indentation Options:
 set tabstop=8                  " A \t should look like 8 spaces. Don't change
 set shiftwidth=2               " Number of spaces for indent/auto-indent
 set softtabstop=2              " Number of spaces to use for Tab/BS in insert mode
@@ -211,7 +199,6 @@ vnoremap . :norm.<CR>
 
 " Clear search highlighting
 nnoremap <Leader><space> :noh<cr>
-nnoremap <Leader>0 0w
 " Fold a tag
 nnoremap <Leader>ft Vatzf
 " Should sort CSS properties but doesn't: nnoremap <Leader>r ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
@@ -231,29 +218,93 @@ let &guioptions = substitute(&guioptions, "t", "", "g")
 " Doesn't seem to work. `:reg .` will show removed text.
 " inoremap <C-U> <C-G>u<C-U>
 
+" Prepends the character sequence to comment out a line based on the filetype.
+function! CommentLine()
+  let text = getline('.')
+  if text == ''
+    return
+  endif
+
+  let language_comments = {
+        \'c': '//',
+        \'cpp': '//',
+        \'java': '//',
+        \'javascript': '//',
+        \'python': '#',
+        \'scheme': ';',
+        \'sh': '#',
+        \'vim': '"',
+        \'winbash': ';',
+        \}
+  if has_key(language_comments, &filetype)
+    if text =~ "^ *" . language_comments[&filetype]
+      return
+    endif
+    :execute 'normal! I' . language_comments[&filetype] . " \<ESC>^"
+  endif
+endfunction
+
+" Shortcut to comment out lines.
+nnoremap <silent> <leader>/ :call CommentLine() <CR>
+xnoremap <silent> <leader>/ :call CommentLine() <CR>
+
 " Only do this part when compiled with support for autocommands.
 if has('autocmd')
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrc
-  au!
+    autocmd!
 
-  " For all text files set 'textwidth' to 80 characters.
-  autocmd FileType text setlocal textwidth=80
+    function! SetLocalFormatting()
+      setlocal textwidth=80
+      setlocal formatoptions+=c  " Insert comment leader after wrapping
+      setlocal formatoptions+=r  " or hitting <Enter>
+      setlocal formatoptions+=q  " Format comments with gq
+      setlocal formatoptions+=l  " Insert mode won't break existing long lines
+      setlocal formatoptions+=j  " Delete comment leader when joining lines
+      setlocal formatoptions+=t  " Auto-wrap at textwidth
+      setlocal colorcolumn=+1
 
-  autocmd FileType markdown setlocal textwidth=120
+      if &filetype ==? "markdown"
+        setlocal textwidth=120
+      endif
+    endfunction
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
+    function! ResetHelpFormatting()
+      " Help files set ft=help from modelines, which are only read after we
+      " have already called SetLocalFormatting.
+      if &filetype ==? "help"
+        setlocal textwidth&
+        setlocal colorcolumn&
+        setlocal formatoptions&
+      endif
+    endfunction
 
-  " Like autochdir but better.
-  autocmd BufEnter * silent! lcd %:p:h
+    " Overrides for text formatting.
+    autocmd BufNewFile,BufReadPost * call SetLocalFormatting()
+    " Reset help after processing modelines.
+    autocmd BufWinEnter * call ResetHelpFormatting()
+
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    " Also don't do it when the mark is in the first line, that is the default
+    " position when opening a file.
+    autocmd BufReadPost *
+      \ if line("'\"") > 1 && line("'\"") <= line("$") |
+      \   exe "normal! g`\"" |
+      \ endif
+
+    " Like autochdir but better.
+    autocmd BufEnter * silent! lcd %:p:h
+
+    autocmd ColorScheme * call ColorColumnHighlight()
+
+    autocmd InsertEnter * :set nolist
+    autocmd InsertLeave * :set list
+
+    if has('win32')
+      autocmd BufNewFile D:/dev/ubuntu/* setlocal fileformat=unix
+    endif
 
   augroup END
 else
@@ -305,7 +356,7 @@ set titlestring=%t\ %M\ (%{GetPath()})\ -\ %{GetTitle()}\ (%{mode()})
 " HTML indent setup
 let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
-let g:html_indent_strict=1
+let g:html_indent_strict = 1
 
 
 map <F4> :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
@@ -381,8 +432,11 @@ endfunction
 "
 " plasticboy/vim-markdown
 let g:vim_markdown_folding_level = 4
-let g:vim_markdown_new_list_item_indent = 2
+let g:vim_markdown_new_list_item_indent = 0
 let g:markdown_fenced_languages = ["cpp", "c"]
+
+" org-mode
+let g:org_indent = 1
 
 set foldlevelstart=9
 
@@ -392,9 +446,13 @@ set tags=tags;
 " Jump to next merge conflict
 nnoremap <Leader>m /<\{7}<CR>zt
 
+nnoremap <Leader>0 0w
+
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
 
-call camelcasemotion#CreateMotionMappings('<leader>')
+if exists('g:vundle_success') && g:vundle_success
+  call camelcasemotion#CreateMotionMappings('<leader>')
+endif
 
 " todo: Plugins on Windows: argtextobj, vim-abolish, vim-javascript, vim-markdown, vim-repeat, vim-surround
