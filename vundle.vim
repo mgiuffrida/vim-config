@@ -36,4 +36,4 @@ Plugin 'jceb/vim-orgmode'
 
 call vundle#end() " required for Vundle
 
-let g:vundle_success = v:true
+let g:vundle_success = 1
