@@ -28,7 +28,9 @@ Plugin 'hynek/vim-python-pep8-indent' " Better PEP-8 indent
 Plugin 'plasticboy/vim-markdown'
 Plugin 'alunny/pegjs-vim'
 Plugin 'jceb/vim-orgmode'
-Plugin 'flazz/vim-colorschemes'
+if $OS == 'wsl'
+  Plugin 'flazz/vim-colorschemes'
+endif
 
 " Plugins to consider:
 "   SuperTab
