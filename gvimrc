@@ -7,6 +7,7 @@ endfunction
 
 if has('win32') || has('win32unix')
   set guifont=Consolas:h11
+  set lines=40
 endif
 
 let &numberwidth = float2nr(log10(line("$"))) + 3
