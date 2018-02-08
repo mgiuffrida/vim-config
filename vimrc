@@ -62,6 +62,20 @@ Plugin 'junegunn/fzf.vim'
 
 call vundle#end() " required for Vundle
 
+" fzf
+set rtp+=~/tools/fzf
+
+" gn files
+set runtimepath+=$HOME/dev/c/tot/src/tools/gn/misc/vim
+
+" mojom files
+set runtimepath+=$HOME/dev/c/w1/src/tools/vim/mojom
+
+" workaround for crbug.com/763570
+if !exists('*maktaba#path#Basename')
+  runtime autoload/maktaba.vim
+endif
+
 " Load extended matching plugin for %.
 :runtime macros/matchit.vim
 
@@ -97,6 +111,7 @@ set hlsearch             " Highlight searches
 set ignorecase smartcase " Ignore case in all-lowercase searches
 set incsearch            " Incremental search (search as you type)
 set showmatch            " Show matching bracket
+set tagcase=match        " Respect case for tag searches
 
 " Insert mode:
 " Allow backspacing over everything in insert mode
@@ -117,16 +132,14 @@ set wildmode=longest:full,full
 set showcmd                    " Show partial command in status line
 set laststatus=2               " Always show a status line
 
+" Shorter on work pc (see history).
 "               .----------filename
 "               | .--------modified [+]/[-]
 "               | | .------readonly [RO]
 "               | | | .----preview [preview]
-"               | | | |    .-------------buffer
-"               | | | |    |     ........fileformat [unix]
-"               | | | |    |     |   ....filetype [vim]
-"               | | | |    |     |   |     .....paste mode warning
-"               | | | |    |     |   |     |
-set statusline=%f%m%r%w\ [%n:%{&ff}/%y]\ %{HasPaste()}\ %=
+"               | | | |    .---paste mode warning
+"               | | | |    |
+set statusline=%F%m%r%w\ %{HasPaste()}\ %=
 set statusline+=[%b]\ \ %#LineNr#\ \ %l\/%L\ :%3.3v%##
 "                 |                   |   |       |
 "                 |                   |   |       ^--virtual (tab-expanded) col
@@ -147,9 +160,9 @@ endfunc
 
 call ColorColumnHighlight()
 
-set ruler                      " Can cause choppy scrolling...
 set number                     " Display line numbers at left of screen
-set relativenumber             " Show line numbers relative to cursor
+" Causes huge delays over SSH with tmux
+" set relativenumber             " Show line numbers relative to cursor
 set visualbell                 " Flash the screen instead of beeping on errors
 set t_vb=                      " And then disable even the flashing
 set mouse=a                    " Enable mouse usage (all modes) in terminals
@@ -178,6 +191,31 @@ if has('multi_byte')
 en
 
 set modelines=5
+
+if filereadable($HOME . "/dev/c/tot/src/tools/vim/clang-format.vim")
+  source $HOME/dev/c/tot/src/tools/vim/clang-format.vim
+endif
+
+
+if has('cscope')
+  set cscopetag  " Use cscope for tag searches (:tag foo, Ctrl-])
+  set cscopeverbose
+
+  let db = findfile("cscope.out", ".;")
+  if (!empty(db))
+    let path = strpart(db, 0, match(db, "/cscope.out$"))
+    set nocscopeverbose " suppress startup message or 'duplicate connection' error
+    exe "cs add " . db . " " . path
+    set cscopeverbose
+  endif
+
+  " todo: enable quickfix
+
+  " todo: map commands
+  " http://cscope.sourceforge.net/cscope_maps.vim
+  " http://vim.wikia.com/wiki/Cscope
+endif
+
 
 """""""
 " Maps
@@ -231,6 +269,9 @@ nnoremap <Leader>v V`]
 
 " Commands:
 command! -nargs=* Wrap set wrap nolinebreak nolist
+
+" Map :B to :b since I frequently mistype it.
+command! -nargs=? -complete=buffer B :buffer <args>
 
 set splitbelow splitright " Split windows below or to the right
 
@@ -330,6 +371,12 @@ if has('autocmd')
       autocmd BufNewFile D:/dev/ubuntu/* setlocal fileformat=unix
     endif
 
+    autocmd FileType python setlocal shiftwidth=2
+
+    " Syntax highlighting and tab settings for gyp(i), DEPS, and 'git cl'
+    " changelist description files.
+    so $HOME/dev/c/tot/src/tools/vim/filetypes.vim
+
   augroup END
 else
   set autochdir
@@ -382,6 +429,8 @@ let g:html_indent_script1 = "inc"
 let g:html_indent_style1 = "inc"
 let g:html_indent_strict = 1
 
+" Find possibly over-indended HTML
+map <Leader>. /^\(\s*\)<[^<>]*\n\1\s\{5\}/e<CR>
 
 map <F4> :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
 map <Leader>h :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
@@ -389,9 +438,14 @@ map <Leader>t :e %<.
 
 ab <// </<C-X><C-O><C-F>
 
-if $THIS_ENV ==# "google"
-  set path+=~/dev/c/src
-endif
+" if $THIS_ENV ==# "google"
+"   set path+=~/dev/c/src
+" endif
+
+set path+=..,../..,../../..,../../../..,../../../../..,../../../../../..,../../../../../../..
+set path+=out_linux/rel/gen,../out_linux/rel/gen,../../out_linux/rel/gen,../../../out_linux/rel/gen,../../../../out_linux/rel/gen,../../../../../out_linux/rel/gen,../../../../../../out_linux/rel/gen
+set path+=out_cros/rel/gen,../out_cros/rel/gen,../../out_cros/rel/gen,../../../out_cros/rel/gen,../../../../out_cros/rel/gen,../../../../../out_cros/rel/gen,../../../../../../out_cros/rel/gen
+
 
 " set paste: paste mode (disables formatting & abbreviations)
 " toggle with <F11>
@@ -480,3 +534,15 @@ if exists('g:vundle_success') && g:vundle_success
 endif
 
 " todo: Plugins on Windows: argtextobj, vim-abolish, vim-javascript, vim-markdown, vim-repeat, vim-surround
+
+let g:CSSMinisterCreateMappings = 0
+
+" whitelist .ycm_extra_conf.py for YCM
+let g:ycm_extra_conf_globlist = ['~/dev/c/*/.ycm_extra_conf.py']
+
+" uncomment to disable gutter
+let g:ycm_enable_diagnostic_signs = 0
+
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+map <F9> :YcmCompleter FixIt<CR>
