@@ -12,7 +12,7 @@ if has('win32') || has('win32unix')
   let s:vundlevim = $HOME.'/_vundle.vim'
 else
   let s:backup = $HOME.'/.vimbackup'
-  let s:vundlevim = $HOME.'/.vundle.vim'
+  let s:bundle = $HOME.'/.vim/bundle'
 endif
 
 " Environment configuration
@@ -30,13 +30,37 @@ endif
 let mapleader = ","
 let maplocalleader = "\\"
 
-" Load Vundle plugins.
-try
-  :exec 'source ' . s:vundlevim
-catch
-  echom v:exception
-  echom 'Failed to source ' . s:vundlevim
-endtry
+" required for Vundle
+let &runtimepath .= ',' . s:bundle . '/Vundle.vim'
+
+call vundle#begin(s:bundle)
+
+Plugin 'VundleVim/Vundle.vim' " required for Vundle
+Plugin 'tpope/vim-abolish'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-git'
+Plugin 'tpope/vim-surround'
+Plugin 'bkad/CamelCaseMotion'
+Plugin 'mattn/emmet-vim'
+Plugin 'othree/html5.vim'
+Plugin 'mgiuffrida/CSSMinister'
+Plugin 'travisjeffery/vim-help'
+Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'nvie/vim-flake8'
+Plugin 'majutsushi/tagbar'
+Plugin 'jceb/vim-orgmode'
+Plugin 'valloric/YouCompleteMe'
+Plugin 'google/vim-maktaba'
+"Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'junegunn/fzf.vim'
+
+" Plugins to consider:
+"   SuperTab
+"   nerdcommenter
+"   ctrlp
+"   vim-easymotion
+
+call vundle#end() " required for Vundle
 
 " Load extended matching plugin for %.
 :runtime macros/matchit.vim
