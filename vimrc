@@ -9,10 +9,10 @@ endif
 " Directories
 if has('win32') || has('win32unix')
   let s:backup = $HOME.'/_vimbackup'
-  let s:vundlevim = $HOME.'/_vundle.vim'
+  let s:plugins = $HOME.'/_plugins.vim'
 else
   let s:backup = $HOME.'/.vimbackup'
-  let s:bundle = $HOME.'/.vim/bundle'
+  let s:plugins_vim = $HOME.'/.plugins.vim'
 endif
 
 " Environment configuration
@@ -30,37 +30,13 @@ endif
 let mapleader = ","
 let maplocalleader = "\\"
 
-" required for Vundle
-let &runtimepath .= ',' . s:bundle . '/Vundle.vim'
-
-call vundle#begin(s:bundle)
-
-Plugin 'VundleVim/Vundle.vim' " required for Vundle
-Plugin 'tpope/vim-abolish'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-surround'
-Plugin 'bkad/CamelCaseMotion'
-Plugin 'mattn/emmet-vim'
-Plugin 'othree/html5.vim'
-Plugin 'mgiuffrida/CSSMinister'
-Plugin 'travisjeffery/vim-help'
-Plugin 'hynek/vim-python-pep8-indent'
-Plugin 'nvie/vim-flake8'
-Plugin 'majutsushi/tagbar'
-Plugin 'jceb/vim-orgmode'
-Plugin 'valloric/YouCompleteMe'
-Plugin 'google/vim-maktaba'
-"Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'junegunn/fzf.vim'
-
-" Plugins to consider:
-"   SuperTab
-"   nerdcommenter
-"   ctrlp
-"   vim-easymotion
-
-call vundle#end() " required for Vundle
+" Load Vundle plugins.
+try
+  :exec 'source ' . s:plugins_vim
+catch
+  echom v:exception
+  echom 'Failed to source ' . s:plugins_vim
+endtry
 
 " fzf
 set rtp+=~/tools/fzf
@@ -69,7 +45,7 @@ set rtp+=~/tools/fzf
 set runtimepath+=$HOME/dev/c/tot/src/tools/gn/misc/vim
 
 " mojom files
-set runtimepath+=$HOME/dev/c/w1/src/tools/vim/mojom
+set runtimepath+=$HOME/dev/c/tot/src/tools/vim/mojom
 
 " workaround for crbug.com/763570
 if !exists('*maktaba#path#Basename')
