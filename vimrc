@@ -251,6 +251,8 @@ command! -nargs=? -complete=buffer B :buffer <args>
 
 set splitbelow splitright " Split windows below or to the right
 
+let g:vim_indent_cont = 4
+
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
 let &guioptions = substitute(&guioptions, "t", "", "g")
 
@@ -422,7 +424,6 @@ set path+=..,../..,../../..,../../../..,../../../../..,../../../../../..,../../.
 set path+=out_linux/rel/gen,../out_linux/rel/gen,../../out_linux/rel/gen,../../../out_linux/rel/gen,../../../../out_linux/rel/gen,../../../../../out_linux/rel/gen,../../../../../../out_linux/rel/gen
 set path+=out_cros/rel/gen,../out_cros/rel/gen,../../out_cros/rel/gen,../../../out_cros/rel/gen,../../../../out_cros/rel/gen,../../../../../out_cros/rel/gen,../../../../../../out_cros/rel/gen
 
-
 " set paste: paste mode (disables formatting & abbreviations)
 " toggle with <F11>
 " indent by shiftwidth: <<, >>
@@ -446,7 +447,6 @@ set path+=out_cros/rel/gen,../out_cros/rel/gen,../../out_cros/rel/gen,../../../o
 " Show buffers: :ls
 " Go to buffer 2: :b 2
 " Unload buffer: :bdelete name/#
-"
 
 function! HasPaste()
   if &paste
@@ -461,37 +461,6 @@ endfunction
 "   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 " endif
 
-" Plugin cheat-sheet
-"
-" #vim-surround
-" Change surroundings:
-"   cs"]
-" Delete surroundings:
-"   ds"
-" Surround text object:
-"   ysiw"
-" Surround entire line:
-"   yss"
-" Visual mode:
-"   S"
-"
-" #vim-abolish
-" Abolish:
-"   :Abolish {despa,sepe}rat{e,es,ed,ing,ely,ion,ions,or} {despe,sepa}rat{}
-" Subvert:
-"   :%S/address{,es,ed,ing}/referenc{e,es,ed,ing}/g
-" Coerce:
-"   crs (snake_case), crm (MixedCase), crc (camelCase), cru (UPPER_CASE)
-"
-"
-" plasticboy/vim-markdown
-let g:vim_markdown_folding_level = 4
-let g:vim_markdown_new_list_item_indent = 0
-let g:markdown_fenced_languages = ["cpp", "c"]
-
-" org-mode
-let g:org_indent = 1
-
 set foldlevelstart=9
 
 " look for tags in cwd, then in parent directories
@@ -504,21 +473,3 @@ nnoremap <Leader>0 0w
 
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
-
-if exists('g:vundle_success') && g:vundle_success
-  call camelcasemotion#CreateMotionMappings('<leader>')
-endif
-
-" todo: Plugins on Windows: argtextobj, vim-abolish, vim-javascript, vim-markdown, vim-repeat, vim-surround
-
-let g:CSSMinisterCreateMappings = 0
-
-" whitelist .ycm_extra_conf.py for YCM
-let g:ycm_extra_conf_globlist = ['~/dev/c/*/.ycm_extra_conf.py']
-
-" uncomment to disable gutter
-let g:ycm_enable_diagnostic_signs = 0
-
-let g:ycm_autoclose_preview_window_after_insertion = 1
-
-map <F9> :YcmCompleter FixIt<CR>
