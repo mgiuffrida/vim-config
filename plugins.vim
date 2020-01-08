@@ -114,11 +114,34 @@ let g:markdown_fenced_languages = ["cpp", "c"]
 "   S"
 
 " YouCompleteMe
+" From clangd:
+" Let clangd fully control code completion
+let g:ycm_clangd_uses_ycmd_caching = 0
+" Use installed clangd, not YCM-bundled clangd which doesn't get updates.
+let g:ycm_clangd_binary_path = exepath("clangd")
+
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_enable_diagnostic_signs = 0  " disable gutter
 " whitelist .ycm_extra_conf.py for YCM
-let g:ycm_extra_conf_globlist = ['~/dev/c/*/.ycm_extra_conf.py']
+let g:ycm_extra_conf_globlist = ['/work/src/c/*']
 map <F9> :YcmCompleter FixIt<CR>
+
+" fugitive: support Gbrowser, assumes Chromium
+if !exists('g:fugitive_browse_handlers')
+  let g:fugitive_browse_handlers = []
+endif
+
+function! ChromiumFugitiveUrl(opts, ...) abort
+  echom "in chromiumFugitiveUrl"
+  let path = substitute(a:opts.path, '^/', '', '')
+  echom "path: " . path
+  let url = 'https://cs.chromium.org/chromium/src/' . path
+  return url
+endfunction
+
+if index(g:fugitive_browse_handlers, function('ChromiumFugitiveUrl')) < 0
+  call insert(g:fugitive_browse_handlers, function('ChromiumFugitiveUrl'))
+endif
 
 " }}}
 

@@ -41,11 +41,13 @@ endtry
 " fzf
 set rtp+=~/tools/fzf
 
+let chromium_src = '/work/src/c/tot/src'
+
 " gn files
-set runtimepath+=$HOME/dev/c/tot/src/tools/gn/misc/vim
+let &runtimepath .= ',' . chromium_src . '/tools/gn/misc/vim'
 
 " mojom files
-set runtimepath+=$HOME/dev/c/tot/src/tools/vim/mojom
+let &runtimepath .= ',' . chromium_src . '/tools/vim/mojom'
 
 " workaround for crbug.com/763570
 if !exists('*maktaba#path#Basename')
@@ -168,8 +170,12 @@ en
 
 set modelines=5
 
-if filereadable($HOME . "/dev/c/tot/src/tools/vim/clang-format.vim")
-  source $HOME/dev/c/tot/src/tools/vim/clang-format.vim
+if filereadable(chromium_src . '/tools/vim/clang-format.vim')
+  exec 'source ' . chromium_src . '/tools/vim/clang-format.vim'
+endif
+
+if filereadable(chromium_src . '/tools/vim/ninja-build.vim')
+  exec 'source ' . chromium_src . '/tools/vim/ninja-build.vim'
 endif
 
 
@@ -298,7 +304,9 @@ if has('autocmd')
     autocmd!
 
     function! SetLocalFormatting()
-      setlocal textwidth=80
+      if empty(&textwidth)
+        setlocal textwidth=80
+      endif
       setlocal formatoptions+=c  " Insert comment leader after wrapping
       setlocal formatoptions+=r  " or hitting <Enter>
       setlocal formatoptions+=q  " Format comments with gq
@@ -307,8 +315,9 @@ if has('autocmd')
       setlocal formatoptions+=t  " Auto-wrap at textwidth
       setlocal colorcolumn=+1
 
-      if &filetype ==? "markdown"
-        setlocal textwidth=120
+      if &filetype ==? "markdown" || &filetype ==? "gitcommit"
+        setlocal formatoptions+=n  " Recognize lists
+        setlocal formatlistpat+=\\\|^\\*\\s*  " Treat * as bullets
       endif
     endfunction
 
@@ -353,7 +362,9 @@ if has('autocmd')
 
     " Syntax highlighting and tab settings for gyp(i), DEPS, and 'git cl'
     " changelist description files.
-    so $HOME/dev/c/tot/src/tools/vim/filetypes.vim
+    if filereadable(chromium_src . '/tools/vim/filetypes.vim')
+      exec 'source ' . chromium_src . '/tools/vim/filetypes.vim'
+    endif
 
   augroup END
 else
@@ -470,6 +481,14 @@ set tags=tags;
 nnoremap <Leader>m /<\{7}<CR>zt
 
 nnoremap <Leader>0 0w
+
+" make for Chromium
+" set makeprg=autoninja\ -C\ out_cros/rel\ chrome
+" nmap <F5> :make<CR>
+" nmap <F6> :cp<CR>
+" nmap <F7> :cc<CR>
+" nmap <F8> :cn<CR>
+" nmap <F9> :cl<CR>
 
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
