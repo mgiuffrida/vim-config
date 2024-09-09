@@ -482,13 +482,14 @@ nnoremap <Leader>m /<\{7}<CR>zt
 
 nnoremap <Leader>0 0w
 
-" make for Chromium
-" set makeprg=autoninja\ -C\ out_cros/rel\ chrome
-" nmap <F5> :make<CR>
-" nmap <F6> :cp<CR>
-" nmap <F7> :cc<CR>
-" nmap <F8> :cn<CR>
-" nmap <F9> :cl<CR>
+" WSL yank support
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif
 
 " Do this last (especially after setting encoding)
 set autochdir " may cause problems with scripts
