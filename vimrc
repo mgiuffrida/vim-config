@@ -168,8 +168,6 @@ if has('multi_byte')
   set encoding=utf-8
 en
 
-set modelines=5
-
 if filereadable(chromium_src . '/tools/vim/clang-format.vim')
   exec 'source ' . chromium_src . '/tools/vim/clang-format.vim'
 endif
@@ -202,7 +200,10 @@ endif
 """""""
 " Maps
 """""""
-"
+
+" With the U key now mapped to I, hold Ctrl and the U key (I) for undo
+nnoremap <C-i> <Undo>
+
 " F1 to be a context sensitive keyword-under-cursor lookup
 nnoremap <F1> :help <C-R><C-W><CR>
 
@@ -360,12 +361,7 @@ if has('autocmd')
 
     autocmd FileType python setlocal shiftwidth=2
 
-    " Syntax highlighting and tab settings for gyp(i), DEPS, and 'git cl'
-    " changelist description files.
-    if filereadable(chromium_src . '/tools/vim/filetypes.vim')
-      exec 'source ' . chromium_src . '/tools/vim/filetypes.vim'
-    endif
-
+    autocmd BufRead,BufNewFile *.gitconfig* set filetype=gitconfig
   augroup END
 else
   set autochdir
@@ -489,6 +485,11 @@ if executable(s:clip)
         autocmd!
         autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
     augroup END
+endif
+
+" neovim
+if has('nvim')
+  set clipboard^=unnamed,unnamedplus
 endif
 
 " Do this last (especially after setting encoding)
