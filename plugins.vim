@@ -60,11 +60,6 @@ Plugin 'plasticboy/vim-markdown'
 Plugin 'travisjeffery/vim-help'
 " Plugin 'alunny/pegjs-vim'
 
-
-if $OS == 'wsl'
-  Plugin 'flazz/vim-colorschemes'
-endif
-
 " Plugins to consider:
 "   SuperTab
 "   nerdcommenter
