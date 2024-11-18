@@ -201,9 +201,6 @@ endif
 " Maps
 """""""
 
-" With the U key now mapped to I, hold Ctrl and the U key (I) for undo
-nnoremap <C-i> <Undo>
-
 " F1 to be a context sensitive keyword-under-cursor lookup
 nnoremap <F1> :help <C-R><C-W><CR>
 
