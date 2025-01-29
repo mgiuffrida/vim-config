@@ -127,9 +127,15 @@ set statusline+=[%b]\ \ %#LineNr#\ \ %l\/%L\ :%3.3v%##
 
 " Interface Options:
 if has('win32') || has('win32unix')
-  silent! colo darkblue
+  "silent! colo darkblue
 else
-  silent! colo industry
+  if $is_dark_mode == 'true'
+    silent! colo industry
+    set bg=dark
+  else
+    set bg=light
+    silent! colo wildcharm
+  endif
 endif
 
 function! ColorColumnHighlight()
