@@ -26,18 +26,15 @@ Plugin 'bkad/CamelCaseMotion'
 " Editing
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-surround'
-Plugin 'amadeus/vim-convert-color-to'
+" Plugin 'amadeus/vim-convert-color-to'
 
 " Coding
-Plugin 'majutsushi/tagbar'
+" Plugin 'majutsushi/tagbar'
 
 " File completion
-Plugin 'junegunn/fzf.vim'
+" Plugin 'junegunn/fzf.vim'
 
-" Plugins
-Plugin 'google/vim-maktaba'
-
-Plugin 'will133/vim-dirdiff'
+" Plugin 'will133/vim-dirdiff'
 
 " File types:
 
@@ -46,18 +43,18 @@ Plugin 'tpope/vim-fugitive'  " git wrapper
 Plugin 'tpope/vim-git'  " runtime files
 
 " HTML/CSS
-Plugin 'mattn/emmet-vim'
+" Plugin 'mattn/emmet-vim'
 Plugin 'mgiuffrida/CSSMinister'
-Plugin 'othree/html5.vim'
+" Plugin 'othree/html5.vim'
 
 " Python
-Plugin 'hynek/vim-python-pep8-indent'  " Better PEP-8 indent
-Plugin 'nvie/vim-flake8'  " Python syntax and indent checker
+" Plugin 'hynek/vim-python-pep8-indent'  " Better PEP-8 indent
+" Plugin 'nvie/vim-flake8'  " Python syntax and indent checker
 
 " Other
-Plugin 'jceb/vim-orgmode'
+" Plugin 'jceb/vim-orgmode'
 Plugin 'plasticboy/vim-markdown'
-Plugin 'travisjeffery/vim-help'
+" Plugin 'travisjeffery/vim-help'
 " Plugin 'alunny/pegjs-vim'
 
 " Plugins to consider:
@@ -82,7 +79,7 @@ let g:CSSMinisterCreateMappings = 0
 call camelcasemotion#CreateMotionMappings('<leader>')
 
 " org-mode
-let g:org_indent = 1
+" let g:org_indent = 1
 
 " vim-abolish cheat sheet
 " Abolish:
@@ -109,26 +106,7 @@ let g:markdown_fenced_languages = ["cpp", "c"]
 " Visual mode:
 "   S"
 
-" fugitive: support Gbrowser, assumes Chromium
-if !exists('g:fugitive_browse_handlers')
-  let g:fugitive_browse_handlers = []
-endif
-
-function! ChromiumFugitiveUrl(opts, ...) abort
-  echom "in chromiumFugitiveUrl"
-  let path = substitute(a:opts.path, '^/', '', '')
-  echom "path: " . path
-  let url = 'https://cs.chromium.org/chromium/src/' . path
-  return url
-endfunction
-
-if index(g:fugitive_browse_handlers, function('ChromiumFugitiveUrl')) < 0
-  call insert(g:fugitive_browse_handlers, function('ChromiumFugitiveUrl'))
-endif
-
 " }}}
-
-" todo: Plugins on Windows: argtextobj, vim-javascript, vim-markdown, vim-repeat, vim-surround
 
 augroup plugins.vim
   autocmd!

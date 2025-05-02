@@ -1,15 +1,11 @@
-" todo: source stuff for filenames
-" does cygwin prevent sourcing before the below?
-
-" Fix for Cygwin
-if has('win32unix')
-  set runtimepath+='C:/Users/micha/vimfiles'
-endif
+let g:is_phpstorm = has('ide') && &ide == 'PhpStorm'
 
 " Directories
 if has('win32') || has('win32unix')
-  let s:backup = $HOME.'/_vimbackup'
-  let s:plugins = $HOME.'/_plugins.vim'
+  if !is_phpstorm
+    let s:backup = $HOME.'/_vimbackup'
+    let s:plugins_vim = $HOME.'/_plugins.vim'
+  endif
 else
   let s:backup = $HOME.'/.vimbackup'
   let s:plugins_vim = $HOME.'/.plugins.vim'
@@ -30,6 +26,35 @@ endif
 let mapleader = ","
 let maplocalleader = "\\"
 
+nnoremap <Leader>0 0w
+
+" Map <C-L> (redraw screen) to also turn off search highlighting until the
+" next search
+nnoremap <C-L> :nohl<CR><C-L>
+
+" Jump to next merge conflict
+nnoremap <Leader>m /<\{7}<CR>zt
+
+inoremap jk <ESC>
+
+" Quickly time out on keycodes
+set timeoutlen=200
+
+set visualbell                 " Flash the screen instead of beeping on errors
+set t_vb=                      " And then disable even the flashing
+
+" Search Options:
+set hlsearch             " Highlight searches
+set ignorecase smartcase " Ignore case in all-lowercase searches
+set incsearch            " Incremental search (search as you type)
+set showmatch            " Show matching bracket
+set tagcase=match        " Respect case for tag searches
+
+if is_phpstorm
+  finish
+endif
+
+
 " Load Vundle plugins.
 try
   :exec 'source ' . s:plugins_vim
@@ -37,22 +62,6 @@ catch
   echom v:exception
   echom 'Failed to source ' . s:plugins_vim
 endtry
-
-" fzf
-set rtp+=~/tools/fzf
-
-let chromium_src = '/work/src/c/tot/src'
-
-" gn files
-let &runtimepath .= ',' . chromium_src . '/tools/gn/misc/vim'
-
-" mojom files
-let &runtimepath .= ',' . chromium_src . '/tools/vim/mojom'
-
-" workaround for crbug.com/763570
-if !exists('*maktaba#path#Basename')
-  runtime autoload/maktaba.vim
-endif
 
 " Load extended matching plugin for %.
 :runtime macros/matchit.vim
@@ -83,13 +92,6 @@ set backup
 let &directory = s:backup . '/swap//,' . $HOME . '/tmp//,.'
 let &undodir = s:backup . '/undo//,' . $HOME . '/tmp//,.'
 let &backupdir = s:backup . '/backup//,' . $HOME . '/tmp//,.'
-
-" Search Options:
-set hlsearch             " Highlight searches
-set ignorecase smartcase " Ignore case in all-lowercase searches
-set incsearch            " Incremental search (search as you type)
-set showmatch            " Show matching bracket
-set tagcase=match        " Respect case for tag searches
 
 " Insert mode:
 " Allow backspacing over everything in insert mode
@@ -145,14 +147,11 @@ endfunc
 call ColorColumnHighlight()
 
 set number                     " Display line numbers at left of screen
+
 " Causes huge delays over SSH with tmux
 " set relativenumber             " Show line numbers relative to cursor
-set visualbell                 " Flash the screen instead of beeping on errors
-set t_vb=                      " And then disable even the flashing
-set mouse=a                    " Enable mouse usage (all modes) in terminals
 
-" Quickly time out on keycodes
-set timeoutlen=200
+set mouse=a                    " Enable mouse usage (all modes) in terminals
 
 " Keep 3 lines around cursor visible
 set scrolloff=3
@@ -172,34 +171,6 @@ set listchars=tab:>\ ,trail:$,extends:%,precedes:<,nbsp:+
 " Text Options:
 if has('multi_byte')
   set encoding=utf-8
-en
-
-if filereadable(chromium_src . '/tools/vim/clang-format.vim')
-  exec 'source ' . chromium_src . '/tools/vim/clang-format.vim'
-endif
-
-if filereadable(chromium_src . '/tools/vim/ninja-build.vim')
-  exec 'source ' . chromium_src . '/tools/vim/ninja-build.vim'
-endif
-
-
-if has('cscope')
-  set cscopetag  " Use cscope for tag searches (:tag foo, Ctrl-])
-  set cscopeverbose
-
-  let db = findfile("cscope.out", ".;")
-  if (!empty(db))
-    let path = strpart(db, 0, match(db, "/cscope.out$"))
-    set nocscopeverbose " suppress startup message or 'duplicate connection' error
-    exe "cs add " . db . " " . path
-    set cscopeverbose
-  endif
-
-  " todo: enable quickfix
-
-  " todo: map commands
-  " http://cscope.sourceforge.net/cscope_maps.vim
-  " http://vim.wikia.com/wiki/Cscope
 endif
 
 
@@ -227,15 +198,9 @@ inoremap <C-U> <C-G>u<C-U>
 " which is the default
 "map Y y$
 
-" Map <C-L> (redraw screen) to also turn off search highlighting until the
-" next search
-nnoremap <C-L> :nohl<CR><C-L>
-
 " Toggle search highlighting
 "nnoremap <C-Bslash>       :set hls!<bar>:set hls?<CR>
 "inoremap <C-Bslash>       <Esc>:set hls!<bar>:set hls?<CR>a
-
-inoremap jk <ESC>
 
 " nnoremap ; :
 nnoremap <Leader>. ,
@@ -420,20 +385,6 @@ let g:html_indent_strict = 1
 " Find possibly over-indended HTML
 map <Leader>. /^\(\s*\)<[^<>]*\n\1\s\{5\}/e<CR>
 
-map <F4> :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
-map <Leader>h :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
-map <Leader>t :e %<.
-
-ab <// </<C-X><C-O><C-F>
-
-" if $THIS_ENV ==# "google"
-"   set path+=~/dev/c/src
-" endif
-
-set path+=..,../..,../../..,../../../..,../../../../..,../../../../../..,../../../../../../..
-set path+=out_linux/rel/gen,../out_linux/rel/gen,../../out_linux/rel/gen,../../../out_linux/rel/gen,../../../../out_linux/rel/gen,../../../../../out_linux/rel/gen,../../../../../../out_linux/rel/gen
-set path+=out_cros/rel/gen,../out_cros/rel/gen,../../out_cros/rel/gen,../../../out_cros/rel/gen,../../../../out_cros/rel/gen,../../../../../out_cros/rel/gen,../../../../../../out_cros/rel/gen
-
 " set paste: paste mode (disables formatting & abbreviations)
 " toggle with <F11>
 " indent by shiftwidth: <<, >>
@@ -474,26 +425,36 @@ endfunction
 set foldlevelstart=9
 
 " look for tags in cwd, then in parent directories
-set tags=tags;
-
-" Jump to next merge conflict
-nnoremap <Leader>m /<\{7}<CR>zt
-
-nnoremap <Leader>0 0w
+" set tags=tags;
 
 " WSL yank support
-let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
-if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-    augroup END
-endif
+"let s:clip = '/mnt/c/Windows/System32/clip.exe'
+"if executable(s:clip)
+"    augroup WSLYank
+"        autocmd!
+"        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+"    augroup END
+"endif
 
 " neovim
 if has('nvim')
-  set clipboard^=unnamed,unnamedplus
+  " The following line, alone, makes vim startup very slow:
+  "  set clipboard^=unnamed,unnamedplus
+
+  " But the below seems to work fine:
+  let g:clipboard = {
+              \   'name': 'WslClipboard',
+              \   'copy': {
+              \      '+': 'win32yank.exe -i --crlf',
+              \      '*': 'win32yank.exe -i --crlf',
+              \    },
+              \   'paste': {
+              \      '+': 'win32yank.exe -o --lf',
+              \      '*': 'win32yank.exe -o --lf',
+              \   },
+              \   'cache_enabled': 0,
+              \ }
 endif
 
 " Do this last (especially after setting encoding)
-set autochdir " may cause problems with scripts
+" set autochdir " may cause problems with scripts
