@@ -60,7 +60,6 @@ try
   :exec 'source ' . s:plugins_vim
 catch
   echom v:exception
-  echom 'Failed to source ' . s:plugins_vim
 endtry
 
 " Load extended matching plugin for %.
