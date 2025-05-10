@@ -421,7 +421,8 @@ endfunction
 "   setglobal tags-=./tags tags-=./tags; tags^=./tags;
 " endif
 
-set foldlevelstart=9
+set foldmethod=indent
+set foldlevelstart=99
 
 " look for tags in cwd, then in parent directories
 " set tags=tags;
