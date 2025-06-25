@@ -98,7 +98,10 @@ set backspace=indent,eol,start
 set autoindent                " Use indent from current/first line
 set nolinebreak               " No soft break across words when wrapping
                               " Messes with colorcolumn
-set pastetoggle=<F2>          " Format options don't apply when paste is set
+
+if !has('nvim')
+  set pastetoggle=<F2>          " Format options don't apply when paste is set
+endif
 
 set nowrap
 
