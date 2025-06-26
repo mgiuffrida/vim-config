@@ -220,6 +220,8 @@ nnoremap <Leader>ft Vatzf
 " Reselect the text that was just pasted
 nnoremap <Leader>v V`]
 
+nnoremap <C-S> :w<CR>
+
 " Commands:
 command! -nargs=* Wrap set wrap nolinebreak nolist
 
