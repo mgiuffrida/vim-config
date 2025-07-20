@@ -79,7 +79,7 @@ set confirm                    " Prompt to save unsaved changes when exiting
 " ! - save all-caps global variables
 " ' - files with remembered markes
 " / - saved search patterns
-" : - saved commands 
+" : - saved commands
 " < - saved lines per register
 " f - store file marks
 " h - don't restore hlsearch
@@ -183,9 +183,6 @@ endif
 " F1 to be a context sensitive keyword-under-cursor lookup
 nnoremap <F1> :help <C-R><C-W><CR>
 
-" Delete current buffer without closing the window
-nnoremap <Leader>c :bp<bar>sp<bar>bn<bar>bd<CR>
-
 " Break undo sequence before deleting characters
 inoremap <C-U> <C-G>u<C-U>
 
@@ -267,8 +264,8 @@ function! CommentLine()
 endfunction
 
 " Shortcut to comment out lines.
-nnoremap <silent> <leader>/ :call CommentLine() <CR>
-xnoremap <silent> <leader>/ :call CommentLine() <CR>
+" nnoremap <silent> <leader>/ :call CommentLine() <CR>
+" xnoremap <silent> <leader>/ :call CommentLine() <CR>
 
 " Only do this part when compiled with support for autocommands.
 if has('autocmd')
@@ -460,6 +457,129 @@ if has('nvim')
               \   'cache_enabled': 0,
               \ }
 endif
+
+" spacevim leader mappings to play around with sometime:
+" https://github.com/liuchengxu/space-vim/blob/master/core/autoload/spacevim/map/leader.vim
+
+nnoremap <silent> <leader>      :<c-u>WhichKey ','<CR>
+vnoremap <silent> <leader>      :<c-u>WhichKeyVisual ','<CR>
+nnoremap <silent> <localleader> :<c-u>WhichKey  '\\'<CR>
+
+""" From https://github.com/liuchengxu/vim-which-key:
+" Define prefix dictionary
+let g:which_key_map =  {}
+
+" Second level dictionaries:
+" 'name' is a special field. It will define the name of the group, e.g., leader-f is the "+file" group.
+" Unnamed groups will show a default empty string.
+
+" =======================================================
+" Create menus based on existing mappings
+" =======================================================
+" You can pass a descriptive text to an existing mapping.
+
+let g:which_key_map.f = { 'name' : '+file' }
+
+nnoremap <silent> <leader>fs :update<CR>
+let g:which_key_map.f.s = 'save-file'
+
+nnoremap <silent> <leader>fd :e $MYVIMRC<CR>
+let g:which_key_map.f.d = 'open-vimrc'
+
+nnoremap <silent> <leader>oq  :copen<CR>
+nnoremap <silent> <leader>ol  :lopen<CR>
+let g:which_key_map.o = {
+      \ 'name' : '+open',
+      \ 'q' : 'open-quickfix'    ,
+      \ 'l' : 'open-locationlist',
+      \ }
+
+" =======================================================
+" Create menus not based on existing mappings:
+" =======================================================
+" Provide commands(ex-command, <Plug>/<C-W>/<C-d> mapping, etc.)
+" and descriptions for the existing mappings.
+"
+" Note:
+" Some complicated ex-cmd may not work as expected since they'll be
+" feed into `feedkeys()`, in which case you have to define a decicated
+" Command or function wrapper to make it work with vim-which-key.
+" Ref issue #126, #133 etc.
+
+let g:which_key_map.b = {
+      \ 'name' : '+buffer' ,
+      \ '1' : ['b1'        , 'buffer 1']        ,
+      \ '2' : ['b2'        , 'buffer 2']        ,
+      \ 'd' : ['bd'        , 'delete-buffer']   ,
+      \ 'f' : ['bfirst'    , 'first-buffer']    ,
+      \ 'h' : ['Startify'  , 'home-buffer']     ,
+      \ 'l' : ['blast'     , 'last-buffer']     ,
+      \ 'n' : ['bnext'     , 'next-buffer']     ,
+      \ 'p' : ['bprevious' , 'previous-buffer'] ,
+      \ '?' : ['Buffers'   , 'fzf-buffer']      ,
+      \ 'c' : [':bp | sp | bn | bd'   , 'delete buffer']      ,
+      \ }
+" Delete current buffer without closing the window
+" nnoremap <Leader>c :bp<bar>sp<bar>bn<bar>bd<CR>
+
+let g:which_key_map.l = {
+      \ 'name' : '+lsp',
+      \ 'f' : ['spacevim#lang#util#Format()'          , 'formatting']       ,
+      \ 'r' : ['spacevim#lang#util#FindReferences()'  , 'references']       ,
+      \ 'R' : ['spacevim#lang#util#Rename()'          , 'rename']           ,
+      \ 's' : ['spacevim#lang#util#DocumentSymbol()'  , 'document-symbol']  ,
+      \ 'S' : ['spacevim#lang#util#WorkspaceSymbol()' , 'workspace-symbol'] ,
+      \ 'g' : {
+        \ 'name': '+goto',
+        \ 'd' : ['spacevim#lang#util#Definition()'     , 'definition']      ,
+        \ 't' : ['spacevim#lang#util#TypeDefinition()' , 'type-definition'] ,
+        \ 'i' : ['spacevim#lang#util#Implementation()' , 'implementation']  ,
+        \ },
+      \ }
+
+let g:which_key_map['w'] = {
+      \ 'name' : '+windows' ,
+      \ 'w' : ['<C-W>w'     , 'other-window']          ,
+      \ 'd' : ['<C-W>c'     , 'delete-window']         ,
+      \ '-' : ['<C-W>s'     , 'split-window-below']    ,
+      \ '|' : ['<C-W>v'     , 'split-window-right']    ,
+      \ '2' : ['<C-W>v'     , 'layout-double-columns'] ,
+      \ 'h' : ['<C-W>h'     , 'window-left']           ,
+      \ 'j' : ['<C-W>j'     , 'window-below']          ,
+      \ 'l' : ['<C-W>l'     , 'window-right']          ,
+      \ 'k' : ['<C-W>k'     , 'window-up']             ,
+      \ 'H' : ['<C-W>5<'    , 'expand-window-left']    ,
+      \ 'J' : [':resize +5'  , 'expand-window-below']   ,
+      \ 'L' : ['<C-W>5>'    , 'expand-window-right']   ,
+      \ 'K' : [':resize -5'  , 'expand-window-up']      ,
+      \ '=' : ['<C-W>='     , 'balance-window']        ,
+      \ 's' : ['<C-W>s'     , 'split-window-below']    ,
+      \ 'v' : ['<C-W>v'     , 'split-window-below']    ,
+      \ '?' : ['Windows'    , 'fzf-window']            ,
+      \ }
+
+let g:which_key_map['c'] = {
+      \ 'name' : '+windows' ,
+      \ 'w' : ['<C-W>w'     , 'other-window']          ,
+      \ 'd' : ['<C-W>c'     , 'delete-window']         ,
+      \ '-' : ['<C-W>s'     , 'split-window-below']    ,
+      \ '|' : ['<C-W>v'     , 'split-window-right']    ,
+      \ '2' : ['<C-W>v'     , 'layout-double-columns'] ,
+      \ 'h' : ['<C-W>h'     , 'window-left']           ,
+      \ 'j' : ['<C-W>j'     , 'window-below']          ,
+      \ 'l' : ['<C-W>l'     , 'window-right']          ,
+      \ 'k' : ['<C-W>k'     , 'window-up']             ,
+      \ 'H' : ['<C-W>5<'    , 'expand-window-left']    ,
+      \ 'J' : [':resize +5'  , 'expand-window-below']   ,
+      \ 'L' : ['<C-W>5>'    , 'expand-window-right']   ,
+      \ 'K' : [':resize -5'  , 'expand-window-up']      ,
+      \ '=' : ['<C-W>='     , 'balance-window']        ,
+      \ 's' : ['<C-W>s'     , 'split-window-below']    ,
+      \ 'v' : ['<C-W>v'     , 'split-window-below']    ,
+      \ '?' : ['Windows'    , 'fzf-window']            ,
+      \ }
+
+call which_key#register(',', "g:which_key_map")
 
 " Do this last (especially after setting encoding)
 " set autochdir " may cause problems with scripts

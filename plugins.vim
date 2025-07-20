@@ -51,6 +51,9 @@ Plugin 'mgiuffrida/CSSMinister'
 " Plugin 'hynek/vim-python-pep8-indent'  " Better PEP-8 indent
 " Plugin 'nvie/vim-flake8'  " Python syntax and indent checker
 
+" Vim
+Plugin 'liuchengxu/vim-which-key'
+
 " Other
 " Plugin 'jceb/vim-orgmode'
 Plugin 'plasticboy/vim-markdown'
