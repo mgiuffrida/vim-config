@@ -439,24 +439,24 @@ set foldlevelstart=99
 "endif
 
 " neovim
-if has('nvim')
-  " The following line, alone, makes vim startup very slow:
-  "  set clipboard^=unnamed,unnamedplus
-
-  " But the below seems to work fine:
-  let g:clipboard = {
-              \   'name': 'WslClipboard',
-              \   'copy': {
-              \      '+': 'win32yank.exe -i --crlf',
-              \      '*': 'win32yank.exe -i --crlf',
-              \    },
-              \   'paste': {
-              \      '+': 'win32yank.exe -o --lf',
-              \      '*': 'win32yank.exe -o --lf',
-              \   },
-              \   'cache_enabled': 0,
-              \ }
-endif
+" if has('nvim')
+"   " The following line, alone, makes vim startup very slow:
+"   "  set clipboard^=unnamed,unnamedplus
+"
+"   " But the below seems to work fine:
+"   let g:clipboard = {
+"               \   'name': 'WslClipboard',
+"               \   'copy': {
+"               \      '+': 'win32yank.exe -i --crlf',
+"               \      '*': 'win32yank.exe -i --crlf',
+"               \    },
+"               \   'paste': {
+"               \      '+': 'win32yank.exe -o --lf',
+"               \      '*': 'win32yank.exe -o --lf',
+"               \   },
+"               \   'cache_enabled': 0,
+"               \ }
+" endif
 
 " spacevim leader mappings to play around with sometime:
 " https://github.com/liuchengxu/space-vim/blob/master/core/autoload/spacevim/map/leader.vim
@@ -579,7 +579,9 @@ let g:which_key_map['c'] = {
       \ '?' : ['Windows'    , 'fzf-window']            ,
       \ }
 
-call which_key#register(',', "g:which_key_map")
+if exists("which_key#register")
+  call which_key#register(',', "g:which_key_map")
+endif
 
 " Do this last (especially after setting encoding)
 " set autochdir " may cause problems with scripts
