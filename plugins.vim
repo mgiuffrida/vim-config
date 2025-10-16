@@ -57,7 +57,6 @@ Plugin 'liuchengxu/vim-which-key'
 
 " Other
 " Plugin 'jceb/vim-orgmode'
-Plugin 'plasticboy/vim-markdown'
 " Plugin 'travisjeffery/vim-help'
 " Plugin 'alunny/pegjs-vim'
 
@@ -66,6 +65,8 @@ Plugin 'plasticboy/vim-markdown'
 "   nerdcommenter
 "   ctrlp
 "   vim-easymotion
+
+Plugin 'preservim/vim-markdown'
 
 call vundle#end()  " required for Vundle
 
