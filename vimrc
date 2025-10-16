@@ -1,11 +1,7 @@
-let g:is_phpstorm = has('ide') && &ide == 'PhpStorm'
-
 " Directories
 if has('win32') || has('win32unix')
-  if !is_phpstorm
-    let s:backup = $HOME.'/_vimbackup'
-    let s:plugins_vim = $HOME.'/_plugins.vim'
-  endif
+  let s:backup = $HOME.'/_vimbackup'
+  let s:plugins_vim = $HOME.'/_plugins.vim'
 else
   let s:backup = $HOME.'/.vimbackup'
   let s:plugins_vim = $HOME.'/.plugins.vim'
@@ -50,11 +46,6 @@ set incsearch            " Incremental search (search as you type)
 set showmatch            " Show matching bracket
 set tagcase=match        " Respect case for tag searches
 
-if is_phpstorm
-  finish
-endif
-
-
 " Load Vundle plugins.
 try
   :exec 'source ' . s:plugins_vim
@@ -62,10 +53,11 @@ catch
   echom v:exception
 endtry
 
-" Load extended matching plugin for %.
-:runtime macros/matchit.vim
-
 filetype plugin indent on " Enable automatic settings based on file type
+
+" Doesn't seem to be installed anymore:
+" " Load extended matching plugin for %.
+" :runtime macros/matchit.vim
 
 " Prevents some security exploits having to do with modelines in files
 set modelines=0
@@ -457,6 +449,12 @@ set foldlevelstart=99
 "               \   'cache_enabled': 0,
 "               \ }
 " endif
+
+function! ConvertJSDocParamsToObj()
+  :s/@param {\(.*\)} \(.*\)$/\2: \1,/
+endfunction
+
+noremap <leader>jo :call ConvertJSDocParamsToObj()<CR>
 
 " spacevim leader mappings to play around with sometime:
 " https://github.com/liuchengxu/space-vim/blob/master/core/autoload/spacevim/map/leader.vim

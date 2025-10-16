@@ -26,6 +26,7 @@ Plugin 'bkad/CamelCaseMotion'
 " Editing
 Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-surround'
+Plugin 'machakann/vim-highlightedyank'
 " Plugin 'amadeus/vim-convert-color-to'
 
 " Coding
