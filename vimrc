@@ -19,10 +19,8 @@ if &compatible
   set nocompatible
 endif
 
-let mapleader = ","
-let maplocalleader = "\\"
-
-nnoremap <Leader>0 0w
+" Shared settings between vim/neovim and IdeaVim
+source $HOME/config/vim/shared.vimrc
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
 " next search
@@ -30,21 +28,6 @@ nnoremap <C-L> :nohl<CR><C-L>
 
 " Jump to next merge conflict
 nnoremap <Leader>m /<\{7}<CR>zt
-
-inoremap jk <ESC>
-
-" Quickly time out on keycodes
-set timeoutlen=200
-
-set visualbell                 " Flash the screen instead of beeping on errors
-set t_vb=                      " And then disable even the flashing
-
-" Search Options:
-set hlsearch             " Highlight searches
-set ignorecase smartcase " Ignore case in all-lowercase searches
-set incsearch            " Incremental search (search as you type)
-set showmatch            " Show matching bracket
-set tagcase=match        " Respect case for tag searches
 
 " Load Vundle plugins.
 try
@@ -147,8 +130,6 @@ set number                     " Display line numbers at left of screen
 
 set mouse=a                    " Enable mouse usage (all modes) in terminals
 
-" Keep 3 lines around cursor visible
-set scrolloff=3
 set sidescroll=1                " Scroll smoothly when nowrap
 set display+=lastline           " Show partial last line when the line wraps
 
@@ -430,7 +411,6 @@ set foldlevelstart=99
 "    augroup END
 "endif
 
-" neovim
 " if has('nvim')
 "   " The following line, alone, makes vim startup very slow:
 "   "  set clipboard^=unnamed,unnamedplus
@@ -449,12 +429,6 @@ set foldlevelstart=99
 "               \   'cache_enabled': 0,
 "               \ }
 " endif
-
-function! ConvertJSDocParamsToObj()
-  :s/@param {\(.*\)} \(.*\)$/\2: \1,/
-endfunction
-
-noremap <leader>jo :call ConvertJSDocParamsToObj()<CR>
 
 " spacevim leader mappings to play around with sometime:
 " https://github.com/liuchengxu/space-vim/blob/master/core/autoload/spacevim/map/leader.vim
