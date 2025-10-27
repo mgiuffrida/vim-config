@@ -27,6 +27,8 @@ nnoremap <leader>y "+y
 vnoremap <leader>y "+y
 nnoremap <leader>p "+p
 vnoremap <leader>p "+p
+nnoremap <leader>x "+x
+vnoremap <leader>x "+x
 
 " Convert dot property access to bracket access
 nnoremap <leader>.[ s['<Esc>/\W<CR>i']<Esc>:nohl<CR>
